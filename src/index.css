@@ -1,0 +1,231 @@
+@import '@fontsource-variable/archivo/standard.css';
+@import '@fontsource-variable/space-grotesk';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Tokens primitifs */
+    --c-cream: #e1dedc;
+    --c-ink: #191919;
+    --c-cobalt: #0148c6;
+    --c-volt: #ffe600;
+    --c-pop: #ff0098;
+    --c-azur: #4dabf7;
+    --c-cherry: #f71f1a;
+    --c-slate: #2e3a40;
+
+    /* Tokens shadcn (conservés pour les composants ui) */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 222 100% 39%;
+    --radius: 0.625rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-cream text-ink font-sans antialiased;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--c-volt);
+    color: var(--c-ink);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--c-volt);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .on-dark :focus-visible,
+  .on-dark:focus-visible {
+    outline-color: var(--c-volt);
+  }
+}
+
+@layer components {
+  /* ---- Titres display : Archivo étendue, capitales serrées ---- */
+  .display-xl {
+    font-family: 'Archivo Variable', sans-serif;
+    font-weight: 900;
+    font-stretch: 118%;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 0.88;
+  }
+
+  .display-md {
+    font-family: 'Archivo Variable', sans-serif;
+    font-weight: 800;
+    font-stretch: 112%;
+    text-transform: uppercase;
+    letter-spacing: -0.015em;
+    line-height: 0.95;
+  }
+
+  /* ---- Surlignage en bloc de couleur, légèrement incliné ---- */
+  .hl {
+    display: inline-block;
+    padding: 0.02em 0.14em;
+    color: var(--c-ink);
+    transform: rotate(-1.5deg);
+    border-radius: 0.1em;
+  }
+  .hl-volt { background: var(--c-volt); }
+  .hl-pop { background: var(--c-pop); color: var(--c-ink); }
+  .hl-azur { background: var(--c-azur); }
+  .hl-cream { background: var(--c-cream); }
+
+  /* ---- Marquee : piste infinie, masques dégradés, pause au survol ---- */
+  .marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 6%, black 94%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee-scroll var(--marquee-duration, 40s) linear infinite;
+    will-change: transform;
+  }
+  .marquee:hover .marquee-track,
+  .marquee:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ---- Bouton à double texte glissant ---- */
+  .btn-slide {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+    min-height: 44px;
+  }
+  .btn-slide .btn-text {
+    display: block;
+    transition: transform 0.28s cubic-bezier(0.25, 0, 0, 1);
+  }
+  .btn-slide .btn-text + .btn-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(110%);
+  }
+  .btn-slide:hover .btn-text:first-child,
+  .btn-slide:focus-visible .btn-text:first-child {
+    transform: translateY(-110%);
+  }
+  .btn-slide:hover .btn-text + .btn-text,
+  .btn-slide:focus-visible .btn-text + .btn-text {
+    transform: translateY(0);
+  }
+  .btn-slide:active {
+    transform: scale(0.97);
+  }
+  .btn-slide {
+    transition: transform 0.15s ease-out;
+  }
+
+  /* ---- Lien avec souligné animé ---- */
+  .link-underline {
+    position: relative;
+  }
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 2px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.25s cubic-bezier(0.25, 0, 0, 1);
+  }
+  .link-underline:hover::after,
+  .link-underline:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* ---- Badge sticker qui tourne lentement ---- */
+  .spin-slow {
+    animation: spin 14s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ---- Flottement doux des blobs ---- */
+  .float-soft {
+    animation: float-soft 7s ease-in-out infinite alternate;
+  }
+  @keyframes float-soft {
+    from { transform: translateY(-8px) rotate(-2deg); }
+    to { transform: translateY(10px) rotate(3deg); }
+  }
+}
+
+/* ---- Accessibilité mouvement réduit ---- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .marquee-track,
+  .spin-slow,
+  .float-soft {
+    animation: none !important;
+  }
+  .btn-slide .btn-text {
+    transition: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
